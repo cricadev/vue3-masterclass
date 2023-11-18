@@ -26,13 +26,17 @@
 </template>
 <script setup lang="ts">
 import { ref } from "vue"
-import {useForumStore} from "@/stores/forumStore"
-defineProps({
+import { useForumStore } from "@/stores/ForumStore"
+
+
+const { findForumById } = useForumStore();
+const props = defineProps({
   forumId: {
     type: String,
     required: true
   }
 })
+const forum = findForumById(props.forumId);
 
 const title = ref('')
 const text = ref('')

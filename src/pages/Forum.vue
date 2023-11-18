@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import ThreadList from "@/components/ThreadList.vue"
-import { useForumStore } from "@/stores/forumStore"
+import { useForumStore } from "@/stores/ForumStore"
 
 const store = useForumStore()
 

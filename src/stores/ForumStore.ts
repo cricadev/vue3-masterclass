@@ -1,10 +1,13 @@
-import { defineStore, acceptHMRUpdate } from "pinia";
+import { defineStore, acceptHMRUpdate, storeToRefs } from "pinia";
 import { ref, computed } from 'vue'
-
+import { useCategoriesStore } from "./CategoriesStore";
+import { useThreadsStore } from "./ThreadsStore";
 import sourceData from "@/data.json"
 
-export const useForumStore = defineStore("ForumStore",()=>{
+export const useForumStore = defineStore("ForumStore", () => {
   const forums = ref(sourceData.forums);
+  const { categories } = storeToRefs(useCategoriesStore())
+  const { threads } = storeToRefs(useThreadsStore())
   // getters
   // const categories = computed(() => {
   //   return state.value.categories
@@ -24,33 +27,38 @@ export const useForumStore = defineStore("ForumStore",()=>{
 
   // actions find 
 
-  // const findThreadsThatMatchesForum = (id: string) => {
-  //   return threads.value.filter(thread => thread.forumId === id)
-  // }
+  const findThreadsThatMatchesForum = (id: string) => {
+    return threads.value.filter(thread => thread.forumId === id)
+  }
 
-  // const findCategoryById = (id: string) => {
-  //   return categories.value.find(category => category.id === id)
-  // }
+  const findCategoryById = (id: string) => {
+    return categories.value.find(category => category.id === id)
+  }
 
-  // const forumsThatMatchesCategory = (id: string) => {
-  //   return forums.value.filter(forum => forum.categoryId === id)
-  // }
+  const forumsThatMatchesCategory = (id: string) => {
+    return forums.value.filter(forum => forum.categoryId === id)
+  }
 
-  // const findForumById = (id: string) => {
-  //   return forums.value.find(forum => forum.id === id)
-  // }
-  // const findCategoryThatMatchesForum = (id: string) => {
-  //   return categories.value.find(category => category.id === id)
-  // }
+  const findForumById = (id: string) => {
+    return forums.value.find(forum => forum.id === id)
+  }
+  const findCategoryThatMatchesForum = (id: string) => {
+    return categories.value.find(category => category.id === id)
+  }
 
   // const findUserById = (id: string) => {
   //   return users.value.find(user => user.id === id)
   // }
 
-return {
-  forums
-}
-  
+  return {
+    forums,
+    forumsThatMatchesCategory,
+    findCategoryById,
+    findForumById,
+    findCategoryThatMatchesForum,
+    findThreadsThatMatchesForum
+  }
+
 });
 
 if (import.meta.hot) {

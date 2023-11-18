@@ -20,12 +20,10 @@ export const useThreadsStore = defineStore("ThreadsStore", () => {
     thread.id = 'ggqq' + Math.random()
     thread.publishedAt = Math.floor(Date.now() / 1000)
     threads.value.push(thread)
+    appendThreadToForum(thread)
   }
 
-  const appendPostToThread = (post: any) => {
-    const thread = findThreadById(post.threadId)
-    thread?.posts.push(post.id)
-  }
+ 
 
   const appendThreadToForum = (thread: any) => {
     const forum = findForumById(thread.forumId)

@@ -3,7 +3,9 @@ import { ref, computed } from "vue";
 import sourceData from "@/data.json"
 import { usePostsStore } from "./PostsStore";
 import { useThreadsStore } from "./ThreadsStore";
+
 export const useUsersStore = defineStore("UsersStore", () => {
+  
   const users = ref(sourceData.users)
   const authId = ref("s7Q8Zi2N1SPa5ahzssq9kbyp138")
   const authUser = computed(() => {
