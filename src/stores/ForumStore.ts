@@ -1,29 +1,14 @@
 import { defineStore, acceptHMRUpdate, storeToRefs } from "pinia";
-import { ref, computed } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useCategoriesStore } from "./CategoriesStore";
 import { useThreadsStore } from "./ThreadsStore";
 import sourceData from "@/data.json"
 
 export const useForumStore = defineStore("ForumStore", () => {
   const forums = ref(sourceData.forums);
-  const { categories } = storeToRefs(useCategoriesStore())
-  const { threads } = storeToRefs(useThreadsStore())
-  // getters
-  // const categories = computed(() => {
-  //   return state.value.categories
-  // })
-
-  // const threads = computed(() => {
-  //   return state.value.threads
-  // })
-
-  // const users = computed(() => {
-  //   return state.value.users
-  // })
-
-  // const posts = computed(() => {
-  //   return state.value.posts
-  // })
+  const threads = ref(sourceData.threads);
+  const threadsStore = useThreadsStore()
+  const { categories } = useCategoriesStore()
 
   // actions find 
 
@@ -32,7 +17,7 @@ export const useForumStore = defineStore("ForumStore", () => {
   }
 
   const findCategoryById = (id: string) => {
-    return categories.value.find(category => category.id === id)
+    return categories.find(category => category.id === id)
   }
 
   const forumsThatMatchesCategory = (id: string) => {
@@ -43,15 +28,13 @@ export const useForumStore = defineStore("ForumStore", () => {
     return forums.value.find(forum => forum.id === id)
   }
   const findCategoryThatMatchesForum = (id: string) => {
-    return categories.value.find(category => category.id === id)
+    return categories.find(category => category.id === id)
   }
 
-  // const findUserById = (id: string) => {
-  //   return users.value.find(user => user.id === id)
-  // }
 
   return {
     forums,
+    threads,
     forumsThatMatchesCategory,
     findCategoryById,
     findForumById,

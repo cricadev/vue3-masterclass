@@ -26,10 +26,15 @@
 </template>
 <script setup lang="ts">
 import { ref } from "vue"
+import { useRouter, useRoute } from "vue-router";
 import { useForumStore } from "@/stores/ForumStore"
-
+import { useThreadsStore } from "@/stores/ThreadsStore";
+const router = useRouter();
+const route = useRoute()
+const { createThread } = useThreadsStore();
 
 const { findForumById } = useForumStore();
+
 const props = defineProps({
   forumId: {
     type: String,
@@ -37,16 +42,26 @@ const props = defineProps({
   }
 })
 const forum = findForumById(props.forumId);
-
 const title = ref('')
 const text = ref('')
 
-const save = () => {
-  const thread = {
-    title: title.value,
-    text: text.value,
-    forumId: forum.id
-  }
+const save = async () => {
+  const thread = await createThread(
+    {
+      title: title.value,
+      text: text.value,
+      forumId: props.forumId
+    }
+  )
+
+  router.push({
+    name: 'ThreadShow',
+    params: {
+      threadId: thread?.id
+    }
+  })
+
+
   // dispatch a vuex action
 }
 

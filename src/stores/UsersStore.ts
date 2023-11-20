@@ -40,7 +40,8 @@ export const useUsersStore = defineStore("UsersStore", () => {
     users,
     findUserById,
     authUser,
-    updateUser
+    updateUser,
+    
   }
 });
 if (import.meta.hot) {

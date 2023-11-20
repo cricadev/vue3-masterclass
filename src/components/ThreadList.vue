@@ -10,7 +10,7 @@ const { findUserById } = store
 
 
 
-defineProps({
+const props = defineProps({
   threads: {
     type: Array,
     required: true
@@ -20,6 +20,7 @@ defineProps({
     required: true
   }
 })
+console.log(props.threads)
 
 
 </script>
@@ -50,7 +51,7 @@ defineProps({
       <!-- activity -->
       <div class="flex gap-2 activity">
         <p>
-          {{ thread.posts.length }}
+          {{ thread?.posts?.length || 0 }}
         </p>
         <img :src="findUserById(thread.userId)?.avatar" alt="" class="object-cover w-8 h-8 rounded-full">
         <div>
