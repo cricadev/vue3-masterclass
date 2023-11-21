@@ -6,19 +6,20 @@ import { useRoute } from 'vue-router'
 export const usePostsStore = defineStore("PostsStore", () => {
   const posts = ref(sourceData.posts);
   const { findThreadById } = useThreadsStore()
-  console.log(window.location.pathname.split('/')[2])
   const createPost = (post: any) => {
     post.id = 'ggqq' + Math.random()
     post.publishedAt = Math.floor(Date.now() / 1000)
-    post.threadId = window.location.pathname.split('/')[2]
+    post.threadId = 'tId' + Math.random()
     posts.value.push(post)
     appendPostToThread(post)
   }
 
-  const appendPostToThread = (post: any) => {
-    console.log(post.threadId)
-    const thread = findThreadById(post.threadId)
+  const appendPostToThread = async (post: any) => {
+    console.log(post)
+    const thread = await findThreadById(post.threadId)
     console.log(thread)
+    thread.posts = thread.posts || []
+    thread?.posts?.push(post.threadId)
 
   }
   return {

@@ -16,7 +16,7 @@
       </div>
 
       <div class="btn-group">
-        <button class="btn btn-ghost">Cancel</button>
+        <button class="btn btn-ghost" @click="cancel">Cancel</button>
         <button class="btn btn-blue" type="submit" name="Publish">
           Publish
         </button>
@@ -44,7 +44,14 @@ const props = defineProps({
 const forum = findForumById(props.forumId);
 const title = ref('')
 const text = ref('')
-
+const cancel = () => {
+  router.push({
+    name: 'Forum',
+    params: {
+      id: props.forumId
+    }
+  })
+}
 const save = async () => {
   const thread = await createThread(
     {
@@ -60,6 +67,8 @@ const save = async () => {
       threadId: thread?.id
     }
   })
+
+
 
 
   // dispatch a vuex action

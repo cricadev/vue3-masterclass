@@ -13,7 +13,7 @@ export const useThreadsStore = defineStore("ThreadsStore", () => {
   const { posts } = storeToRefs(postsStore)
 
   const usersStore = useUsersStore()
-  const { authUser } = storeToRefs(usersStore)
+  const { authId } = storeToRefs(usersStore)
   const { findUserById } = usersStore;
   const { findForumById } = useForumStore();
 
@@ -29,7 +29,7 @@ export const useThreadsStore = defineStore("ThreadsStore", () => {
 
     try {
       const id = 'ggqq' + Math.random()
-      const userId = authUser.value.id
+      const userId = authId.value
       const publishedAt = Math.floor(Date.now() / 1000)
       const thread = {
         forumId, title, publishedAt, text, userId, id, posts: []
@@ -49,11 +49,11 @@ export const useThreadsStore = defineStore("ThreadsStore", () => {
 
       // create the post
       const post = {
-        threadId: thread.id,
+        userId: userId,
         text: thread.title
       }
       createPost(post)
-      return threads.value.find(thread => thread.id === id)
+      console.log(threads.value.find(thread => thread.id === id))
     }
     catch (error) {
       console.error(error)
