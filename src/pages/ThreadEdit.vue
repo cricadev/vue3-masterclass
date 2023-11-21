@@ -1,31 +1,36 @@
 <template>
   <div class="col-full push-top">
     <h1>
-      Create new thread in <i>{{ forum.name }}</i>
+      Editing <i>{{ thread.title }}</i>
     </h1>
 
-    <ThreadEditor @save="save" @cancel="cancel"></ThreadEditor>
+    <ThreadEditor :title="thread?.title" :text="text" @save="save" @cancel="cancel"></ThreadEditor>
   </div>
 </template>
 <script setup lang="ts">
 import ThreadEditor from "@/components/ThreadEditor.vue";
-import { ref } from "vue"
+import { computed, ref } from "vue"
 import { useRouter, useRoute } from "vue-router";
 import { useForumStore } from "@/stores/ForumStore"
 import { useThreadsStore } from "@/stores/ThreadsStore";
+import { usePostsStore } from "@/stores/PostsStore";
+import { storeToRefs } from "pinia";
 const router = useRouter();
 const route = useRoute()
-const { createThread } = useThreadsStore();
+const { createThread, findThreadById, updateThread } = useThreadsStore();
+const { posts } = storeToRefs(usePostsStore())
 
-const { findForumById } = useForumStore();
 
 const props = defineProps({
-  forumId: {
+  id: {
     type: String,
     required: true
   }
 })
-const forum = findForumById(props.forumId);
+const thread = findThreadById(props.id)
+const text = computed(() => {
+  return posts.value.find((post) => post.id === thread?.posts[0])?.text
+})
 
 const cancel = () => {
   router.push({
@@ -36,11 +41,11 @@ const cancel = () => {
   })
 }
 const save = async ({ title, text }) => {
-  const thread = await createThread(
+  const thread = await updateThread(
     {
+      id: props.id,
       title: title,
       text: text,
-      forumId: props.forumId
     }
   )
 

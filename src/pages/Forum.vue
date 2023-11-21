@@ -16,7 +16,6 @@ const props = defineProps({
 const forum = findForumById(props.id);
 const category = findCategoryThatMatchesForum(forum?.categoryId);
 const threads = findThreadsThatMatchesForum(props.id);
-console.log(threads)
 </script>
 <template lang="">
    <div class="">

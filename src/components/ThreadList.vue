@@ -20,7 +20,6 @@ const props = defineProps({
     required: true
   }
 })
-console.log(props.threads)
 
 
 </script>

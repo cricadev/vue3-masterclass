@@ -7,18 +7,16 @@ export const usePostsStore = defineStore("PostsStore", () => {
   const posts = ref(sourceData.posts);
   const { findThreadById } = useThreadsStore()
   const createPost = (post: any) => {
-    post.id = 'ggqq' + Math.random()
-    post.publishedAt = Math.floor(Date.now() / 1000)
-    post.threadId = 'tId' + Math.random()
+    const id = 'ggqq' + Math.random()
+    const publishedAt = Math.floor(Date.now() / 1000)
+    post = { ...post, id, publishedAt }
     posts.value.push(post)
     appendPostToThread(post)
   }
 
   const appendPostToThread = async (post: any) => {
-    console.log(post)
     const thread = await findThreadById(post.threadId)
-    console.log(thread)
-    thread.posts = thread.posts || []
+    thread.posts = thread?.posts || []
     thread?.posts?.push(post.threadId)
 
   }

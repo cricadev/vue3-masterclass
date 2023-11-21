@@ -38,6 +38,13 @@ const submitNewPost = (eventData) => {
 
     <h2 class="text-5xl font-bold text-center">
       {{ thread.title }}
+      <router-link :to="{
+        name: 'ThreadEdit', params: {
+          id: props.threadId,
+        }
+      }" class="btn">
+        Edit Thread
+      </router-link>
     </h2>
     <!-- USER CONTAINER -->
     <post-list :posts="threadPosts"></post-list>
@@ -45,4 +52,8 @@ const submitNewPost = (eventData) => {
     <post-editor @save="submitNewPost"></post-editor>
   </div>
 </template>
-<style></style>
+<style scoped>
+.btn {
+  @apply bg-green-100 p-3 block;
+}
+</style>

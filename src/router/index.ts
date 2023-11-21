@@ -7,6 +7,7 @@ import Pokemon from '../components/PokemonDisplay.vue'
 import PokemonSingle from '../components/PokemonComponent.vue'
 import Profile from '../pages/Profile.vue'
 import ThreadCreate from '@/pages/ThreadCreate.vue'
+import ThreadEdit from '@/pages/ThreadEdit.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -33,9 +34,14 @@ const router = createRouter({
       }
     },
     {
-      path: '/form/:forumId/thread/create',
+      path: '/forum/:forumId/thread/create',
       name: 'ThreadCreate',
       component: ThreadCreate,
+      props: true,
+    }, {
+      path: '/thread/:id/edit',
+      name: 'ThreadEdit',
+      component: ThreadEdit,
       props: true,
     },
     {

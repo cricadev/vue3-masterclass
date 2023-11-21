@@ -49,11 +49,44 @@ export const useThreadsStore = defineStore("ThreadsStore", () => {
 
       // create the post
       const post = {
+        threadId: id,
         userId: userId,
-        text: thread.title
+        text: text,
       }
       createPost(post)
-      console.log(threads.value.find(thread => thread.id === id))
+      return threads.value.find(thread => thread.id === id)
+    }
+    catch (error) {
+      console.error(error)
+    }
+  }
+
+  const updateThread = async ({ id, text, title }) => {
+    try {
+      console.log(id, text, title)
+      // Find the thread
+      const threadIndex = threads.value.findIndex(thread => thread.id === id)
+      if (threadIndex === -1) {
+        throw new Error('Thread not found')
+      }
+
+      // Update thread properties
+      threads.value[threadIndex] = {
+        ...threads?.value[threadIndex],
+        title
+      }
+
+      // Find the post
+      const postIndex = posts.value.findIndex(post => post.threadId === id)
+      if (postIndex === -1) {
+        throw new Error('Post not found')
+      }
+
+      // Update post properties
+      posts.value[postIndex] = {
+        ...posts.value[postIndex],
+        text
+      }
     }
     catch (error) {
       console.error(error)
@@ -62,13 +95,12 @@ export const useThreadsStore = defineStore("ThreadsStore", () => {
 
 
 
-
-
   return {
     threads,
     findThreadById,
     findPostsThatMatchesThread,
-    createThread
+    createThread,
+    updateThread
   }
 });
 if (import.meta.hot) {
