@@ -3,6 +3,7 @@
 import CategoryList from "@/components/CategoryList.vue"
 import { useForumStore } from "@/stores/ForumStore"
 
+
 const store = useForumStore()
 
 const { findCategoryById, forumsThatMatchesCategory } = store;

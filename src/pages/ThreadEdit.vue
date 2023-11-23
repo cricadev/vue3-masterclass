@@ -28,6 +28,7 @@ const props = defineProps({
   }
 })
 const thread = findThreadById(props.id)
+console.log(thread)
 const text = computed(() => {
   return posts.value.find((post) => post.id === thread?.posts[0])?.text
 })
@@ -41,6 +42,7 @@ const cancel = () => {
   })
 }
 const save = async ({ title, text }) => {
+
   const thread = await updateThread(
     {
       id: props.id,
@@ -48,17 +50,12 @@ const save = async ({ title, text }) => {
       text: text,
     }
   )
-
   router.push({
     name: 'ThreadShow',
     params: {
-      threadId: thread?.id
+      threadId: props.id
     }
   })
-
-
-
-
   // dispatch a vuex action
 }
 

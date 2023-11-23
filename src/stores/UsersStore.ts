@@ -3,13 +3,16 @@ import { ref, computed } from "vue";
 import sourceData from "@/data.json"
 import { usePostsStore } from "./PostsStore";
 import { useThreadsStore } from "./ThreadsStore";
-
+import { findById } from "@/helpers"
 export const useUsersStore = defineStore("UsersStore", () => {
 
   const users = ref(sourceData.users)
   const authId = ref("s7Q8Zi2N1SPa5ahzssq9kbyp138")
   const authUser = computed(() => {
-    const user = users.value.find(user => user.id === authId.value)
+    return user.value(authId.value)
+  })
+  const user = computed(() => (id: string) => {
+    const user = findById(users.value, id)
     if (!user) return null
     const { posts } = usePostsStore()
     const { threads } = useThreadsStore()
@@ -26,7 +29,7 @@ export const useUsersStore = defineStore("UsersStore", () => {
       threads: userThreads,
       threadsCount: userThreadsCount
     }
-  })
+  });
 
   const updateUser = (user: any) => {
     const index = users.value.findIndex((u: any) => u.id === user.id)
@@ -34,10 +37,11 @@ export const useUsersStore = defineStore("UsersStore", () => {
   }
 
   const findUserById = (id: string) => {
-    return users.value.find(user => user.id === id)
+    return findById(users.value, id)
   }
   return {
     users,
+    user,
     findUserById,
     authUser,
     authId,

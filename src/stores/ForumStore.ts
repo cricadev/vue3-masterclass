@@ -3,7 +3,7 @@ import { ref, onMounted, computed } from 'vue'
 import { useCategoriesStore } from "./CategoriesStore";
 import { useThreadsStore } from "./ThreadsStore";
 import sourceData from "@/data.json"
-
+import { findById } from "@/helpers"
 export const useForumStore = defineStore("ForumStore", () => {
   const forums = ref(sourceData.forums);
   const threads = ref(sourceData.threads);
@@ -17,7 +17,7 @@ export const useForumStore = defineStore("ForumStore", () => {
   }
 
   const findCategoryById = (id: string) => {
-    return categories.find(category => category.id === id)
+    return findById(categories, id)
   }
 
   const forumsThatMatchesCategory = (id: string) => {
@@ -25,10 +25,10 @@ export const useForumStore = defineStore("ForumStore", () => {
   }
 
   const findForumById = (id: string) => {
-    return forums.value.find(forum => forum.id === id)
+    return findById(forums.value, id)
   }
   const findCategoryThatMatchesForum = (id: string) => {
-    return categories.find(category => category.id === id)
+    return findById(categories, id)
   }
 
 

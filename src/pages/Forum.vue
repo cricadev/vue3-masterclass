@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import ThreadList from "@/components/ThreadList.vue"
 import { useForumStore } from "@/stores/ForumStore"
-
+import { useThreadsStore } from "@/stores/ThreadsStore";
 const store = useForumStore()
 
 const { findForumById, findCategoryThatMatchesForum, findThreadsThatMatchesForum } = store;
@@ -15,7 +15,7 @@ const props = defineProps({
 
 const forum = findForumById(props.id);
 const category = findCategoryThatMatchesForum(forum?.categoryId);
-const threads = findThreadsThatMatchesForum(props.id);
+const threads = forum?.threads.map((threadId) => useThreadsStore().getThread(threadId))
 </script>
 <template lang="">
    <div class="">

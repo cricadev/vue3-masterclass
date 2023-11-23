@@ -50,7 +50,7 @@ const props = defineProps({
       <!-- activity -->
       <div class="flex gap-2 activity">
         <p>
-          {{ thread?.posts?.length || 0 }}
+          {{ thread?.repliesCount || 0 }}
         </p>
         <img :src="findUserById(thread.userId)?.avatar" alt="" class="object-cover w-8 h-8 rounded-full">
         <div>

@@ -6,23 +6,45 @@ import { useUsersStore } from "./UsersStore";
 import type { Thread } from "../../types/index"
 import { useForumStore } from "./ForumStore"
 import sourceData from "@/data.json"
-
+import { findById, makeAppendChildToParentMutation } from "@/helpers"
 export const useThreadsStore = defineStore("ThreadsStore", () => {
+
   const threads = ref(sourceData.threads);
   const postsStore = usePostsStore();
-  const { posts } = storeToRefs(postsStore)
+  const { posts } = postsStore;
 
   const usersStore = useUsersStore()
   const { authId } = storeToRefs(usersStore)
   const { findUserById } = usersStore;
-  const { findForumById } = useForumStore();
+  const { forums } = useForumStore();
+  const { users } = usersStore
 
   const findThreadById = (id: string) => {
-    return threads.value.find(thread => thread.id === id)
+    return findById(threads.value, id)
   }
+  const getThread = computed(() => (id: string) => {
+    const thread = findThreadById(id);
+    return {
+      ...thread,
+      get author() {
+        return usersStore.findUserById(thread?.userId)
+
+      },
+      get repliesCount() {
+        return thread?.posts.length - 1
+      },
+      get contributorsCount() {
+        return thread?.contributors.length
+      }
+    }
+  })
+
+
   const findPostsThatMatchesThread = (id: string) => {
-    return posts.value.filter(post => post.threadId === id)
+    return posts.filter(post => post.threadId === id)
   }
+  const appendThreadToForum = makeAppendChildToParentMutation({ parent: forums, child: 'threads' });
+  const appendThreadToUser = makeAppendChildToParentMutation({ parent: users, child: 'threads' });
 
   const createThread = async ({ text, title, forumId }) => {
     const { createPost } = postsStore
@@ -37,15 +59,9 @@ export const useThreadsStore = defineStore("ThreadsStore", () => {
       // ad thread to the threads
       threads.value.push(thread)
       // add thread to the user
-      const user = findUserById(userId)
-      user.threads = user.threads || []
-      user.threads.push(id)
-
+      appendThreadToUser({ childId: thread.id, parentId: thread.userId })
       // add thread to the forum
-
-      const forum = findForumById(forumId)
-      forum.threads = forum.threads || []
-      forum.threads.push(id)
+      appendThreadToForum({ childId: thread.id, parentId: thread.forumId })
 
       // create the post
       const post = {
@@ -54,7 +70,7 @@ export const useThreadsStore = defineStore("ThreadsStore", () => {
         text: text,
       }
       createPost(post)
-      return threads.value.find(thread => thread.id === id)
+      return findById(threads.value, id)
     }
     catch (error) {
       console.error(error)
@@ -62,13 +78,16 @@ export const useThreadsStore = defineStore("ThreadsStore", () => {
   }
 
   const updateThread = async ({ id, text, title }) => {
+    const { posts } = postsStore;
+
     try {
-      console.log(id, text, title)
+
       // Find the thread
-      const threadIndex = threads.value.findIndex(thread => thread.id === id)
+      const threadIndex = threads?.value.findIndex(thread => thread.id === id)
       if (threadIndex === -1) {
         throw new Error('Thread not found')
       }
+
 
       // Update thread properties
       threads.value[threadIndex] = {
@@ -77,14 +96,13 @@ export const useThreadsStore = defineStore("ThreadsStore", () => {
       }
 
       // Find the post
-      const postIndex = posts.value.findIndex(post => post.threadId === id)
+      const postIndex = posts.findIndex(post => post.threadId === id)
       if (postIndex === -1) {
         throw new Error('Post not found')
       }
-
       // Update post properties
-      posts.value[postIndex] = {
-        ...posts.value[postIndex],
+      posts[postIndex] = {
+        ...posts[postIndex],
         text
       }
     }
@@ -97,6 +115,7 @@ export const useThreadsStore = defineStore("ThreadsStore", () => {
 
   return {
     threads,
+    getThread,
     findThreadById,
     findPostsThatMatchesThread,
     createThread,
